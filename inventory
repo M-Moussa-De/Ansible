@@ -1,1 +1,2 @@
 172.18.117.167 ansible_python_interpreter=/usr/bin/python3.12
+172.18.125.154 ansible_python_interpreter=/usr/bin/python3.12
