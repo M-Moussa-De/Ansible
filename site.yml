@@ -16,6 +16,41 @@
       update_only: yes
       update_cache: yes
     when: ansible_distribution == "Fedora" 
+  
+  - name: create user
+    tags: always       
+    ansible.builtin.user:
+      name: simone
+      groups: root
+  
+  ############ Adding System/Bootstrap Users  ############
+ 
+  # Create a user called simone manually (Not recommended)
+  # We will have to add the ~/.ssh/ansible.pub key manaually to each VM
+  # we want to create this use on it.
+  - name: create a user
+    tags: alawys
+    ansible.builtin.user:
+      name: simone
+      groups: root
+
+  # Automate creation of user called simone (recommended)
+  - name: add sudoers file for simone
+    tags: alawys
+    ansible.builtin.copy:
+      src: files/sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+      mode: 0440
+  # Add ssh key for simone
+  - name: add ssh key for simone
+    tags: always
+    ansible.builtin.authorized_key:
+      user: simone
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwPARjXZ1n6nccy7LYCEC8/l62mvbb1hP73TQxZ9bxtkNe64tPQ5S/sFhVh/HM4HyFlmoEX+aOCrmsHpbRNxAHWo5iBRhqcjWxNQ90+APF1xh4m7cOefmJcJupBOgXA4opcLO9MHtdmwP24FcCpisUPfteKzCbD0Z1z8fEdo8jwLpBapQy2w6vXc+fl/SvWQTYDeuBOBQwPToH8ncSIU0L7DwTInwIRQnz8tw5A0QrYGrkOaV37oTmsqOcd9oIUwnaysolVsPhpCgy8MkLUCpmJ44w7hwn3qfH50Pw237H/exGfPEL8X838G63xAEFy+V2jUnGvH3i96U0uGtRuCV1muxzeKPjCatT5yIYfOS1m1ePSdZ+0zzz8YFAoht9RAmwBWU2KRdW43K/LLMlVa6Krzg+UwawIxpgD9PkF152RhIcv27v3sD5XIb8Z3wnlKuTxIU54/MpIexuA1JcfL7QpvI2OgXOUkoMfsAQQMgTfcmmeWPzrEnASU7zq0jcZbs= mm@ansible-ws"  
+
+  ############ End Adding System Users  ############
 
 - hosts: web_servers
   become: true
